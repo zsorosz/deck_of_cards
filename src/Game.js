@@ -5,7 +5,7 @@ const API_BASE_URL = 'https://deckofcardsapi.com/api/deck';
 class Game extends Component {
     constructor(props){
         super(props);
-        this.state = { deck: null };
+        this.state = { deck: null, drawn: [] };
         this.getCard = this.getCard.bind(this);
     }
     async componentDidMount(){
@@ -13,11 +13,28 @@ class Game extends Component {
         this.setState({ deck: deck.data });
     }
     async getCard(){
-        let id = this.state.deck.deck_id;
-        let cardUrl = `${API_BASE_URL}/${id}/draw`;
-        let cardRes = await axios.get(cardUrl);
-        console.log(cardRes);
-        let card = cardRes.data.card[0];
+        let deck_id = this.state.deck.deck_id;
+        try {
+            let cardUrl = `${API_BASE_URL}/${deck_id}/draw`;
+            let cardRes = await axios.get(cardUrl);
+            if (!cardRes.data.success){
+                throw new Error("No cards remaining!")
+            }
+            console.log(cardRes.data);
+            let card = cardRes.data.cards[0];
+            this.setState(st => ({
+                drawn: [
+                    ...st.drawn, 
+                    {
+                        id: card.code, 
+                        image: card.image,
+                        name: `${card.value} of ${card.suit}`
+                    }
+                ]
+            }));
+        } catch (err){
+            alert(err)
+        }    
     }
     render(){
         return(
