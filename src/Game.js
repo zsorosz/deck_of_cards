@@ -43,9 +43,10 @@ class Game extends Component {
             <Card key={c.id} name={c.name} image={c.image} />
         ));
         return(
-            <div>
-                <h1>Card Dealer</h1>
-                <button onClick={this.getCard}>Get Card!</button>
+            <div className="Game">
+                <h1 className="Game-title">Card Dealer</h1>
+                <h2 className="Game-title subtitle">A little demo with React</h2>
+                <button className="Game-btn" onClick={this.getCard}>Get Card!</button>
                 <div className="Game-cardarea">{cards}</div>
             </div>
         )
